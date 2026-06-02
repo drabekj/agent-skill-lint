@@ -1,29 +1,31 @@
 {
-  "name": "claude-skill-lint",
+  "name": "agent-skill-lint",
   "version": "0.1.0",
-  "description": "Linter for Claude Code skill files — validates frontmatter, slug, description triggers, and folder layout.",
+  "description": "Linter for agent skill / rule files — Markdown with YAML frontmatter. Validates the frontmatter, slug, description triggers, and body so an agent loader will actually pick the skill up.",
   "license": "MIT",
   "author": "Jan Drabek <drabek.honza@gmail.com>",
-  "homepage": "https://github.com/drabekj/claude-skill-lint",
+  "homepage": "https://github.com/drabekj/agent-skill-lint",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/drabekj/claude-skill-lint.git"
+    "url": "git+https://github.com/drabekj/agent-skill-lint.git"
   },
   "bugs": {
-    "url": "https://github.com/drabekj/claude-skill-lint/issues"
+    "url": "https://github.com/drabekj/agent-skill-lint/issues"
   },
   "keywords": [
-    "claude",
-    "claude-code",
+    "agent",
     "skill",
+    "rule",
     "linter",
     "cli",
     "yaml",
-    "frontmatter"
+    "frontmatter",
+    "prompt-engineering",
+    "markdown"
   ],
   "type": "module",
   "bin": {
-    "claude-skill-lint": "dist/cli.js"
+    "agent-skill-lint": "dist/cli.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

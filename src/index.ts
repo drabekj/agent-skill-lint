@@ -1,10 +1,14 @@
 /**
- * claude-skill-lint — programmatic API.
+ * agent-skill-lint — programmatic API.
  *
- * Validates the structure of a Claude Code skill file (the `SKILL.md` or
- * standalone `*.md` file with YAML frontmatter that Claude Code loads as a
- * skill). The rules are derived from how Claude Code's skill loader actually
- * indexes skills today.
+ * Validates the structure of an "agent skill" file: a Markdown file with a
+ * YAML frontmatter block (`name`, `description`, optional metadata) and a
+ * body that an AI coding agent will load and consult.
+ *
+ * The default rules cover the common case (`name`, `description` with a
+ * trigger phrase, body present), which is the format used by several agent
+ * skill / rule loaders. The implementation intentionally only reads the
+ * file under test — nothing in `node_modules`, nothing on the network.
  */
 
 import { readFile } from "node:fs/promises";
@@ -33,9 +37,10 @@ export interface LintResult {
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 /**
- * Description "trigger" words — Claude Code's loader rewards descriptions
- * that tell the model *when* to use the skill. We don't require any single
- * word but we warn when none of these (or their inflections) are present.
+ * Description "trigger" words — agent loaders typically pick a skill by
+ * matching the user's intent against the description. Descriptions that
+ * say *when* to fire match better. We don't require any single word but
+ * we warn when none of these are present.
  */
 const TRIGGER_WORDS = [
   "use when",
@@ -107,7 +112,7 @@ export function lintSkillContent(
       issues.push({
         rule: "name-matches-path",
         severity: "warning",
-        message: `\`name\` (${name}) does not match the file/folder slug (${expected}). Claude Code resolves skills by path, so a mismatch is confusing.`,
+        message: `\`name\` (${name}) does not match the file/folder slug (${expected}). Most agent loaders resolve skills by path, so a mismatch is confusing.`,
       });
     }
   }
@@ -117,7 +122,7 @@ export function lintSkillContent(
     issues.push({
       rule: "description-required",
       severity: "error",
-      message: "Frontmatter `description` is required — it's what tells Claude when to invoke the skill.",
+      message: "Frontmatter `description` is required — it's what tells the agent when to invoke the skill.",
     });
   } else {
     if (description.length > MAX_DESCRIPTION_LENGTH) {
@@ -140,7 +145,7 @@ export function lintSkillContent(
       issues.push({
         rule: "description-trigger",
         severity: "warning",
-        message: "`description` does not contain a trigger phrase ('use when', 'before', 'when ', ...). Descriptions that tell Claude *when* to fire match better.",
+        message: "`description` does not contain a trigger phrase ('use when', 'before', 'when ', ...). Descriptions that say *when* to fire match better.",
       });
     }
   }
@@ -151,7 +156,7 @@ export function lintSkillContent(
     issues.push({
       rule: "body-empty",
       severity: "error",
-      message: "Skill body is empty — the body is what Claude actually reads after the skill is loaded.",
+      message: "Skill body is empty — the body is what the agent actually reads after the skill is loaded.",
     });
   } else if (body.length < 40) {
     issues.push({

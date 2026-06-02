@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * claude-skill-lint CLI.
+ * agent-skill-lint CLI.
  *
  * Usage:
- *   claude-skill-lint <path> [<path> ...]
- *   claude-skill-lint --help
+ *   agent-skill-lint <path> [<path> ...]
+ *   agent-skill-lint --help
  *
  * Each path is either a .md file or a directory; directories are walked
  * recursively for *.md files. Exit code is non-zero if any file has an
@@ -19,12 +19,12 @@ import kleur from "kleur";
 
 import { lintSkillFile, type LintResult } from "./index.js";
 
-const HELP = `claude-skill-lint — validate Claude Code skill files
+const HELP = `agent-skill-lint — validate agent skill / rule files
 
 Usage:
-  claude-skill-lint <path> [<path> ...]   Lint one or more .md files / directories.
-  claude-skill-lint --help                Show this message.
-  claude-skill-lint --version             Show version.
+  agent-skill-lint <path> [<path> ...]   Lint one or more .md files / directories.
+  agent-skill-lint --help                Show this message.
+  agent-skill-lint --version             Show version.
 
 Options:
   --quiet     Suppress per-file output for files with no issues.
@@ -102,7 +102,7 @@ async function main(): Promise<void> {
     return;
   }
   if (args.showVersion) {
-    stdout.write("claude-skill-lint 0.1.0\n");
+    stdout.write("agent-skill-lint 0.1.0\n");
     return;
   }
   if (args.paths.length === 0) {
